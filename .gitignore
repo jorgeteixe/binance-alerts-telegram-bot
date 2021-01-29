@@ -1,3 +1,7 @@
+# directories
 venv/
-.env
 .idea/
+__pycache__/
+
+# key files
+.env
