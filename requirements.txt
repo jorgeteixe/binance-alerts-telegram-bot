@@ -1,0 +1,2 @@
+python_binance==0.7.9
+python-dotenv==0.15.0
