@@ -1,18 +1,23 @@
 import os
+import signal
 from dotenv import load_dotenv
 import logging
+from data import init_db
 from bot import start_bot
-from crypto import setup_crypto
 
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+
+def exit_bot(s, f):
+    exit(0)
+
+
 load_dotenv()
-API_KEY = os.getenv("BINANCE_API_KEY")
-SECRET_KEY = os.getenv("BINANCE_SECRET_KEY")
+signal.signal(signal.SIGINT, exit_bot)
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 
 
 def main():
-    binance_client = setup_crypto(API_KEY, SECRET_KEY)
+    init_db()
     start_bot(TELEGRAM_TOKEN)
 
 

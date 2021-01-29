@@ -5,3 +5,6 @@ __pycache__/
 
 # key files
 .env
+
+# database
+data.db
