@@ -7,7 +7,7 @@ from telegram.ext import Updater, CommandHandler
 
 from crypto import create_watchpair, generate_watchpair_msg, generate_tradeposition_msg, create_watchtrade
 from data import start_user_db, make_admin_db, save_watchpair, delete_watchpair, get_watchpairs_from_user, \
-    get_watchtrades_from_user, delete_watchtrade, save_watchtrade
+    get_watchtrades_from_user, delete_watchtrade, save_watchtrade, update_alerting_watchtrade
 
 load_dotenv()
 MY_CHAT_ID = os.getenv("MY_CHAT_ID")
@@ -27,6 +27,7 @@ def start_bot():
     dispatcher.add_handler(CommandHandler('watching', watching))
     dispatcher.add_handler(CommandHandler('wtrade', wtrade))
     dispatcher.add_handler(CommandHandler('unwtrade', unwtrade))
+    dispatcher.add_handler(CommandHandler('atrade', atrade))
     dispatcher.add_handler(CommandHandler('wtrades', wtrades))
     dispatcher.add_handler(MessageHandler(Filters.command, unknown))
     dispatcher.add_handler(MessageHandler(Filters.text, messages))
@@ -131,4 +132,24 @@ def wtrades(update, context):
         else:
             alerts = 'ALERTS OFF'
         msg += f'{w[1]} ({w[2]} min) {alerts}\n'
+    context.bot.send_message(chat_id=update.effective_chat.id, text=msg)
+
+
+def atrade(update, context):
+    log_command('atrade', update.effective_chat)
+    if len(context.args) != 2:
+        msg = 'Usage:\n/atrade <pair> <value>'
+    else:
+        try:
+            alerting = int(context.args[1])
+            if alerting == 1 or alerting == 0:
+                rsp, err = update_alerting_watchtrade(update.effective_chat.id, context.args[0], alerting)
+                if rsp:
+                    msg = f'Updated {context.args[0]} set alerting to {alerting}'
+                else:
+                    msg = err
+            else:
+                raise ValueError
+        except ValueError:
+            msg = 'Alerting value has to be 0 (OFF) or 1 (ON).'
     context.bot.send_message(chat_id=update.effective_chat.id, text=msg)

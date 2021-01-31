@@ -20,6 +20,7 @@ Usage:
 
 #### Trade cryptocyrrency watchlist
 Receive scheduled updates on the selected pair each n minutes.
+To receive special alerts when abrupt changes occur, toggle ALERTING.
 
 Usage: 
 ```
@@ -27,6 +28,10 @@ Usage:
     pair:       valid pair from Binance Exchange
     interval:   minutes between messages [min: 1  max: 1440 (day)]
     enterPrice: base price to show actual position
+
+/atrade <pair> <value>                      >> Change alerting value
+    pair:       the pair to change the value
+    value:      1 to activate, 0 to deactivate
 
 /unwtrade <pair>                            >> Removes from watchtrades-list
     pair:       pair on your watchtrades-list
@@ -42,6 +47,7 @@ watch - add a cryptocurrency pair to your watchlist
 unwatch - remove a pair from your watchlist
 watching - show your watchlist
 wtrade - add a trade to your watchtrades-list
+atrade - set alerting for a specific watchtrade
 unwtrade - remove a pair from your watchtrades-list
 wtrades - show your watchtrades-list
 ```

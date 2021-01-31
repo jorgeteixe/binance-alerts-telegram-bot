@@ -140,8 +140,10 @@ def update_alerting_watchtrade(chat_id, pair, alerting):
     with sqlite3.connect(DATABASE) as conn:
         cursor = conn.cursor()
         value = cursor.execute(select_watchtrade_sql, (chat_id, pair)).fetchone()
-        if value and value[7] != alerting:
-            cursor.execute(update_watchtrade_alert_sql, (alerting, chat_id, pair))
-            logging.info('id=' + str(chat_id) + ' deleted ' + str(pair) + ' from his watchtrades')
-            return True
-        return False
+        if value:
+            if value[7] != alerting:
+                cursor.execute(update_watchtrade_alert_sql, (alerting, chat_id, pair))
+                logging.info('id=' + str(chat_id) + ' set trade alerting for ' + str(pair) + ' to ' + str(alerting))
+                return True, None
+            return False, f'Alerting already set to {alerting}'
+        return False, f'You\'re not watching {pair}'
