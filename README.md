@@ -8,12 +8,14 @@ Use ```unwatch``` to stop.
 
 Usage: 
 ```
-/watch <pair> <interval>
+/watch <pair> <interval>       >> Adds to watchlist
     pair:       valid pair from Binance Exchange
     interval:   minutes between messages [min: 1  max: 1440 (day)]
 
-/unwatch <pair>
+/unwatch <pair>                >> Removes from watchlist
     pair:       pair on your watchlist
+
+/watching                      >> Shows watchlist
 ```
 
 
@@ -21,4 +23,5 @@ Usage:
 ```
 watch - add a cryptocurrency pair to your watchlist
 unwatch - remove a pair from your watchlist
+watching - show your watchlist
 ```

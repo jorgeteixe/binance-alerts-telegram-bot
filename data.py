@@ -80,3 +80,8 @@ def get_watchpairs():
 def update_watchpair(w):
     with sqlite3.connect(DATABASE) as conn:
         conn.execute(update_watchpair_sql, (w[3], w[4], w[0], w[1]))
+
+
+def get_watchpairs_from_user(user_id):
+    with sqlite3.connect(DATABASE) as conn:
+        return conn.execute(select_watchpairs_from_user_sql, (user_id,)).fetchall()

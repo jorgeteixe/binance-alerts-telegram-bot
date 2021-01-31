@@ -41,6 +41,10 @@ select_watchpairs_sql = """
     SELECT chat_id, pair, refresh, last_price, last_send FROM watchpair;
 """
 
+select_watchpairs_from_user_sql = """
+    SELECT chat_id, pair, refresh, last_price, last_send FROM watchpair WHERE chat_id = ?;
+"""
+
 delete_watchpair_sql = """
     DELETE FROM watchpair WHERE chat_id = ? AND pair = ?;
 """

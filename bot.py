@@ -6,7 +6,7 @@ from telegram.ext import MessageHandler, Filters
 from telegram.ext import Updater, CommandHandler
 
 from crypto import create_watchpair, generate_watchpair_msg
-from data import start_user_db, make_admin_db, save_watchpair, delete_watchpair
+from data import start_user_db, make_admin_db, save_watchpair, delete_watchpair, get_watchpairs_from_user
 
 load_dotenv()
 MY_CHAT_ID = os.getenv("MY_CHAT_ID")
@@ -23,6 +23,7 @@ def start_bot():
     dispatcher.add_handler(CommandHandler('start', start))
     dispatcher.add_handler(CommandHandler('watch', watch))
     dispatcher.add_handler(CommandHandler('unwatch', unwatch))
+    dispatcher.add_handler(CommandHandler('watching', watching))
     dispatcher.add_handler(MessageHandler(Filters.command, unknown))
     dispatcher.add_handler(MessageHandler(Filters.text, messages))
     updater.start_polling()
@@ -71,3 +72,15 @@ def unwatch(update, context):
         msg = 'You\'re not watching this...'
     context.bot.send_message(chat_id=update.effective_chat.id, text=msg)
     log_command('unwatch', update.effective_chat)
+
+
+def watching(update, context):
+    watchpairs = get_watchpairs_from_user(update.effective_chat.id)
+    if len(watchpairs) == 0:
+        msg = 'Your watchlist is empty.'
+    else:
+        msg = 'Watchlist:\n'
+    for w in watchpairs:
+        msg += f'{w[1]} ({w[2]} min)\n'
+    context.bot.send_message(chat_id=update.effective_chat.id, text=msg)
+    log_command('watching', update.effective_chat)
