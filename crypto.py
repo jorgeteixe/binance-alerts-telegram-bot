@@ -40,3 +40,31 @@ def create_watchpair(chat_id, args):
     except BinanceAPIException:
         return False, 'Invalid pair.'
     return [[chat_id, pair, refresh, float(price), int(time())], None]
+
+
+def create_watchtrade(chat_id, args):
+    if len(args) != 3:
+        return False, 'Usage:\n/wtrade <pair> <interval> <enterPrice>'
+    try:
+        refresh = int(args[1])
+        if not 1 <= refresh <= 1440:
+            raise ValueError
+    except ValueError:
+        return False, 'Invalid interval.'
+    pair = args[0]
+    try:
+        price = client.get_ticker(symbol=pair)['lastPrice']
+    except BinanceAPIException:
+        return False, 'Invalid pair.'
+    try:
+        enterprice = float(args[2])
+        if enterprice < 0:
+            raise ValueError
+    except ValueError:
+        return False, 'Invalid enterPrice.'
+    return [[chat_id, pair, refresh, float(price), int(time()), enterprice], None]
+
+
+def generate_tradeposition_msg(enterprice, actualprice):
+    change = actualprice / enterprice
+    return f'[{"%.2f" % change}]'
