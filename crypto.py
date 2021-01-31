@@ -1,4 +1,6 @@
 import os
+from time import time
+
 from binance.client import Client
 from binance.exceptions import BinanceAPIException
 from dotenv import load_dotenv
@@ -9,36 +11,32 @@ SECRET_KEY = os.getenv("BINANCE_SECRET_KEY")
 client = Client(API_KEY, SECRET_KEY)
 
 
-def get_balance():
-    my_balances = []
-    msg = ""
-    all_balances = client.get_account()['balances']
-    for b in all_balances:
-        if float(b['free']) > 0:
-            data = {'asset': b['asset'], 'value': float(b['free']), 'btc': 0, 'eur': 0, 'change': ''}
-            if data['asset'] == 'BTC':
-                data['change'] = str(
-                    round(float(client.get_ticker(symbol='BTCEUR')['priceChangePercent']), 2))
-                price = 1
-            elif data['asset'] == 'USDT':
-                continue
-            else:
-                price = float(client.get_avg_price(symbol=str(data['asset']) + 'BTC')['price'])
-                data['change'] = str(
-                    round(float(client.get_ticker(symbol=str(data['asset']) + 'BTC')['priceChangePercent']), 2))
-            data['btc'] = price * float(data['value'])
-            btceur = float(client.get_avg_price(symbol='BTCEUR')['price'])
-            data['eur'] = btceur * data['btc']
-            my_balances.append(data)
-    for b in sorted(my_balances, key=lambda x: x['btc'], reverse=True):
-        msg += str(b['asset']) + ': ' + str(b['value']) + ' (' + str(round(b['eur'], 2)) + ' €) [' + b[
-            'change'] + '%]\n'
-    return msg
+def generate_watchpair_msg(watchpair):
+    ticker = client.get_ticker(symbol=watchpair[1])
+    last_price = float(ticker['lastPrice'])
+    change = float(ticker['priceChangePercent'])
+    if last_price > watchpair[3]:
+        arrow = '↑'
+    elif last_price < watchpair[3]:
+        arrow = '↓'
+    else:
+        arrow = '→'
+    if last_price > 1:
+        formatted_price = f'{"%.2f" % last_price}'
+    else:
+        formatted_price = f'{"%.8f" % last_price}'
+    return f'{arrow} {watchpair[1]} {formatted_price} ({"%+.1f" % change}%)', last_price
 
 
-def get_short_balance():
-    pass
-
-
-def get_asset_balance(asset):
-    pass
+def create_watchpair(chat_id, args):
+    if len(args) != 2:
+        return False, 'Usage:\n/watch <pair> <interval>'
+    refresh = int(args[1])
+    if not 1 <= refresh <= 1440:
+        return False, 'Invalid interval.'
+    pair = args[0]
+    try:
+        price = client.get_ticker(symbol=pair)['lastPrice']
+    except BinanceAPIException:
+        return False, 'Invalid pair.'
+    return [[chat_id, pair, refresh, float(price), int(time())], None]
