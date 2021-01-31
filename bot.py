@@ -10,13 +10,14 @@ from data import start_user_db, make_admin_db, save_watchpair, delete_watchpair
 
 load_dotenv()
 MY_CHAT_ID = os.getenv("MY_CHAT_ID")
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 
 
 def log_command(command, eff_chat, params=''):
     logging.info('id=' + str(eff_chat.id) + ' (' + str(eff_chat.username) + ') -> ' + '/' + command + params)
 
 
-def start_bot(TELEGRAM_TOKEN):
+def start_bot():
     updater = Updater(token=TELEGRAM_TOKEN)
     dispatcher = updater.dispatcher
     dispatcher.add_handler(CommandHandler('start', start))
@@ -62,7 +63,9 @@ def watch(update, context):
 
 
 def unwatch(update, context):
-    if delete_watchpair(update.effective_chat.id, context.args[0]):
+    if not context.args or len(context.args) != 1:
+        msg = 'Usage:\n/unwatch <pair>'
+    elif delete_watchpair(update.effective_chat.id, context.args[0]):
         msg = 'Successfully unwatched pair ' + context.args[0]
     else:
         msg = 'You\'re not watching this...'
