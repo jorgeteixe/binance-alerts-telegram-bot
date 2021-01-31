@@ -49,6 +49,7 @@ def start(update, context):
 
 
 def watch(update, context):
+    log_command('watch', update.effective_chat)
     rsp, err = create_watchpair(update.effective_chat.id, context.args)
     if not rsp:
         context.bot.send_message(chat_id=update.effective_chat.id, text=err)
@@ -60,10 +61,10 @@ def watch(update, context):
         return
     msg, _ = generate_watchpair_msg(watchpair)
     context.bot.send_message(chat_id=update.effective_chat.id, text=msg)
-    log_command('watch', update.effective_chat)
 
 
 def unwatch(update, context):
+    log_command('unwatch', update.effective_chat)
     if not context.args or len(context.args) != 1:
         msg = 'Usage:\n/unwatch <pair>'
     elif delete_watchpair(update.effective_chat.id, context.args[0]):
@@ -71,10 +72,10 @@ def unwatch(update, context):
     else:
         msg = 'You\'re not watching this...'
     context.bot.send_message(chat_id=update.effective_chat.id, text=msg)
-    log_command('unwatch', update.effective_chat)
 
 
 def watching(update, context):
+    log_command('watching', update.effective_chat)
     watchpairs = get_watchpairs_from_user(update.effective_chat.id)
     if len(watchpairs) == 0:
         msg = 'Your watchlist is empty.'
@@ -83,4 +84,3 @@ def watching(update, context):
     for w in watchpairs:
         msg += f'{w[1]} ({w[2]} min)\n'
     context.bot.send_message(chat_id=update.effective_chat.id, text=msg)
-    log_command('watching', update.effective_chat)

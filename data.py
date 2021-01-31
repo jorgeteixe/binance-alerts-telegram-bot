@@ -67,7 +67,7 @@ def delete_watchpair(chat_id, pair):
         value = cursor.execute(select_watchpair_sql, (chat_id, pair)).fetchone()
         if value:
             cursor.execute(delete_watchpair_sql, (chat_id, pair))
-            logging.info('id=' + str(chat_id) + ' added ' + str(pair) + ' to his watchpairs')
+            logging.info('id=' + str(chat_id) + ' deleted ' + str(pair) + ' from his watchpairs')
             return True
         return False
 
