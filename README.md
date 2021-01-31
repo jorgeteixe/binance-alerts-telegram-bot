@@ -2,9 +2,8 @@
 Telegram bot for my personal things.
 
 ## Commands
-#### watch / unwatch [cryptocurrency]
+#### Cryptocurrency watchlist
 Receive scheduled updates on the selected pair each n minutes.
-Use ```unwatch``` to stop.
 
 Usage: 
 ```
