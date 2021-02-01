@@ -1,7 +1,36 @@
 # teixeBOT
 Telegram bot for my personal things.
 
+## Get it running
+
+### Ubuntu:
+```bash
+git clone https://github.com/jorgeteixe/teixeBOT.git bot
+apt install build-essential python3.8 python3.8-dev
+cd bot
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+nano .env                         # details below
+python main.py
+```
+
+### .env file
+```.env
+BINANCE_API_KEY=
+BINANCE_SECRET_KEY=
+TELEGRAM_TOKEN=
+MY_CHAT_ID=
+```
+
+1. Get your Binance API key and secret [here](https://accounts.binance.com/en/register).
+2. Get your Telegram Token with [BotFather](https://t.me/BotFather).
+3. Run the software without MY_CHAT_ID, start the conversation with the bot and paste the id shown in your shell.
+
+
+
 ## Commands
+
 #### Cryptocurrency watchlist
 Receive scheduled updates on the selected pair each n minutes.
 
