@@ -1,11 +1,11 @@
-# teixeBOT
-Telegram bot for my personal things.
+# binance-alerts-telegram-bot
+Telegram bot that alerts binance actions.
 
 ## Get it running
 
 ### Ubuntu:
 ```bash
-git clone https://github.com/jorgeteixe/teixeBOT.git bot
+git clone https://github.com/jorgeteixe/binance-alerts-telegram-bot.git bot
 apt install build-essential python3.8 python3.8-dev
 cd bot
 python -m venv venv
