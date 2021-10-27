@@ -3,7 +3,7 @@ Telegram bot that alerts binance actions.
 
 ## Get it running
 
-### Ubuntu:
+### Linux:
 ```bash
 git clone https://github.com/jorgeteixe/binance-alerts-telegram-bot.git bot
 apt install build-essential python3.8 python3.8-dev
